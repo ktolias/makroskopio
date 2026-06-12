@@ -43,7 +43,7 @@ export function Nav({ items, onPresent }: { items: NavItem[]; onPresent: () => v
     <header className="nav">
       <div className="nav__inner shell">
         <button className="brand" onClick={() => go(items[0].id)} aria-label="ΜΑΚΡΟΣΚΟΠΙΟ — αρχή">
-          <img src="/macroscope-mark.svg" alt="" className="brand__mark" />
+          <img src={`${import.meta.env.BASE_URL}macroscope-mark.svg`} alt="" className="brand__mark" />
           <span className="brand__text">
             <span className="brand__word serif">ΜΑΚΡΟΣΚΟΠΙΟ</span>
             <span className="brand__sub">EU-27 · 2000–2024</span>

@@ -3,7 +3,7 @@ export function Footer() {
     <footer className="footer">
       <div className="shell footer__inner">
         <div className="footer__brand">
-          <img src="/macroscope-mark.svg" alt="" className="footer__mark" />
+          <img src={`${import.meta.env.BASE_URL}macroscope-mark.svg`} alt="" className="footer__mark" />
           <div>
             <div className="serif footer__word">ΜΑΚΡΟΣΚΟΠΙΟ</div>
             <div className="footer__tag">EU-27 Macro Observatory · 2000–2024</div>
