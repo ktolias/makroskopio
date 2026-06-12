@@ -1,0 +1,171 @@
+/* ============================================================
+   ΜΑΚΡΟΣΚΟΠΙΟ — presentation deck + print-to-PDF
+   ============================================================ */
+
+.print-only { display: none; }
+
+/* Nav launch button */
+.nav__present {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 38px; padding: 0 14px;
+  border-radius: 11px; border: 1px solid var(--stroke-strong);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--azure) 24%, transparent), transparent);
+  color: var(--text-0); cursor: pointer; font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.nav__present:hover { transform: translateY(-1px); border-color: var(--azure); }
+.nav__present-icon { color: var(--azure); font-size: 13px; }
+
+/* Overlay */
+.deck {
+  position: fixed; inset: 0; z-index: 1000;
+  background:
+    radial-gradient(120% 80% at 50% -10%, color-mix(in srgb, var(--azure) 18%, transparent), transparent 60%),
+    radial-gradient(70% 60% at 90% 110%, color-mix(in srgb, var(--c-gdp) 12%, transparent), transparent 60%),
+    var(--bg-0);
+  display: flex; flex-direction: column;
+}
+.deck__stage { flex: 1; display: grid; place-items: center; padding: 60px 4vw 84px; min-height: 0; }
+
+.slide {
+  width: min(1180px, 92vw); aspect-ratio: 16 / 9; max-height: calc(100vh - 148px);
+  background: var(--surface); border: 1px solid var(--stroke);
+  border-radius: var(--r-xl); box-shadow: var(--card-shadow);
+  backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
+  position: relative; overflow: hidden;
+}
+.slide::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: linear-gradient(150deg, rgba(255,255,255,0.2), transparent 42%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; opacity: 0.7;
+}
+.slide__inner { position: relative; height: 100%; padding: clamp(24px, 3.4vw, 52px); display: flex; flex-direction: column; overflow: hidden; }
+.deck__stage .slide { cursor: grab; }
+.deck__stage .slide:active { cursor: grabbing; }
+
+/* Title slide */
+.slide--title { background: linear-gradient(150deg, color-mix(in srgb, var(--azure) 14%, var(--surface)), var(--surface)); }
+.slide__inner--title { justify-content: center; }
+.slide__eyebrow { margin-bottom: clamp(16px, 2.4vw, 26px); }
+.slide__megatitle {
+  font-size: clamp(44px, 7.4vw, 104px); font-weight: 600; letter-spacing: 0; line-height: 0.96;
+  background: linear-gradient(150deg, var(--text-0) 30%, var(--azure) 75%, var(--c-gdp));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: clamp(18px, 2.4vw, 26px);
+}
+.slide__subtitle { font-size: clamp(15px, 1.9vw, 23px); line-height: 1.45; color: var(--text-1); max-width: 42ch; }
+.slide__title-meta { display: flex; flex-direction: column; gap: 4px; margin-top: clamp(22px, 3.4vw, 40px); font-size: 14px; color: var(--text-3); }
+
+/* Content slide */
+.slide__head { margin-bottom: clamp(12px, 2vw, 24px); flex-shrink: 0; }
+.slide__kicker { font-size: clamp(11px, 1.2vw, 14px); color: var(--azure); letter-spacing: 0.12em; text-transform: uppercase; }
+.slide__title { font-size: clamp(22px, 3.3vw, 42px); line-height: 1.08; margin-top: 10px; }
+.slide__body { flex: 1; display: flex; flex-direction: column; gap: clamp(12px, 1.8vw, 22px); justify-content: center; min-height: 0; overflow: hidden; }
+
+.slide__bullets { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: clamp(7px, 1.1vw, 13px); }
+.slide__bullets li { display: flex; align-items: flex-start; gap: 13px; font-size: clamp(14px, 1.7vw, 21px); line-height: 1.3; color: var(--text-1); }
+.slide__bullet-mark { width: 11px; height: 11px; border-radius: 4px; background: var(--azure); margin-top: clamp(4px, 0.6vw, 7px); flex-shrink: 0; box-shadow: 0 0 12px currentColor; }
+
+.slide__stats { display: flex; flex-wrap: wrap; gap: clamp(12px, 1.6vw, 20px); }
+.slide__stat {
+  flex: 1; min-width: 120px; padding: clamp(12px, 1.6vw, 20px);
+  background: var(--surface-2); border: 1px solid var(--stroke); border-radius: var(--r-md);
+  border-top: 3px solid var(--sc);
+}
+.slide__stat-v { font-size: clamp(23px, 3.2vw, 40px); font-weight: 700; color: var(--sc); line-height: 1; letter-spacing: -0.02em; }
+.slide__stat-l { font-size: clamp(11px, 1.2vw, 14px); color: var(--text-2); margin-top: 6px; }
+
+.slide__footer { margin-top: auto; padding-top: clamp(10px, 1.6vw, 18px); border-top: 1px solid var(--stroke); font-size: clamp(12px, 1.3vw, 15px); color: var(--text-2); line-height: 1.4; flex-shrink: 0; }
+.slide__pageno { position: absolute; bottom: 18px; right: 24px; font-size: 11px; color: var(--text-3); }
+
+/* Controls */
+/* Swipe hint — touch devices only, fades out after a moment */
+.deck__hint {
+  display: none;
+  position: absolute; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%);
+  font-size: 12px; letter-spacing: 0.1em; color: var(--text-3);
+  padding: 7px 16px; border: 1px solid var(--stroke); border-radius: 100px; background: var(--surface);
+  white-space: nowrap; pointer-events: none;
+  animation: deckHintFade 4s ease forwards;
+}
+@media (pointer: coarse) { .deck__hint { display: block; } }
+@keyframes deckHintFade {
+  0%, 70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.deck__controls { position: absolute; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; }
+.deck__btn {
+  width: 48px; height: 48px; border-radius: 14px; border: 1px solid var(--stroke-strong);
+  background: var(--surface); color: var(--text-0); font-size: 24px; cursor: pointer;
+  display: grid; place-items: center; transition: transform 0.2s, background 0.2s, opacity 0.2s;
+  backdrop-filter: blur(12px);
+}
+.deck__btn:hover:not(:disabled) { transform: scale(1.06); background: var(--azure); color: var(--bg-0); }
+.deck__btn:disabled { opacity: 0.3; cursor: default; }
+.deck__dots { display: flex; gap: 9px; }
+.deck__dot { width: 9px; height: 9px; border-radius: 50%; border: none; background: var(--stroke-strong); cursor: pointer; padding: 0; transition: transform 0.2s, background 0.2s; }
+.deck__dot:hover { transform: scale(1.3); }
+.deck__dot.is-on { background: var(--azure); transform: scale(1.3); box-shadow: 0 0 10px var(--azure); }
+
+.deck__top { position: absolute; top: calc(22px + env(safe-area-inset-top, 0px)); left: 0; right: 0; padding: 0 max(5vw, env(safe-area-inset-right)) 0 max(5vw, env(safe-area-inset-left)); display: flex; align-items: center; justify-content: space-between; }
+.deck__counter { font-size: 14px; color: var(--text-2); letter-spacing: 0.1em; }
+.deck__top-actions { display: flex; gap: 10px; }
+.deck__action {
+  padding: 9px 16px; border-radius: 10px; border: 1px solid var(--stroke-strong);
+  background: var(--surface); color: var(--text-1); cursor: pointer; font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+.deck__action:hover { transform: translateY(-1px); border-color: var(--azure); color: var(--text-0); }
+.deck__action--close:hover { border-color: var(--c-co2); }
+
+@media (max-width: 760px) {
+  .nav__present-label { display: none; }
+  .nav__present { padding: 0 11px; }
+  .slide { aspect-ratio: auto; height: calc(100vh - 200px); }
+  .deck__stage { padding: 70px 16px 90px; }
+}
+
+/* ---------------- PRINT → PDF ---------------- */
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+
+  /* Force a high-contrast light palette regardless of the on-screen theme,
+     so the exported PDF never inherits near-white dark-theme text. */
+  :root, [data-theme='dark'], [data-theme='light'] {
+    --text-0: #111c33; --text-1: #2a3552; --text-2: #4a587a; --text-3: #7b87a3;
+    --surface: #ffffff; --surface-2: #eef2f8;
+    --stroke: rgba(20, 40, 80, 0.16); --stroke-strong: rgba(20, 40, 80, 0.28);
+    --heat-0: #e9edf5;
+    --azure: #245fc0; --c-gdp: #a9761a; --c-life: #1c9170; --c-co2: #c8432f; --c-unemp: #5f4fce;
+  }
+
+  html, body { background: #fff !important; }
+  body::before, body::after { display: none !important; }
+  .nav, main, .footer, .deck__stage, .deck__controls, .deck__top { display: none !important; }
+
+  .screen-only { display: none !important; }
+  .print-only { display: block !important; }
+
+  .deck { position: static; background: #fff; }
+  .deck__print { display: block; }
+  .slide--print {
+    width: 100%; height: 100vh; aspect-ratio: auto; max-height: none;
+    border: none; border-radius: 0; box-shadow: none; background: #fff;
+    break-after: page; page-break-after: always; display: flex;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .slide--print:last-child { break-after: auto; page-break-after: auto; }
+  .slide--print::before { display: none; }
+  .slide--print .slide__inner { padding: 6vh 7vw; overflow: hidden; }
+  .slide--title.slide--print { background: #fff; }
+
+  /* The gradient megatitle would print as near-invisible transparent fill — make it solid. */
+  .slide--print .slide__megatitle {
+    background: none !important; -webkit-text-fill-color: #15213c !important; color: #15213c !important;
+  }
+  .slide--print .slide__title, .slide--print .slide__subtitle { color: #15213c !important; }
+  .slide--print .slide__bullets li { color: #28324c !important; }
+  .slide--print .slide__pageno { color: #9aa3b6; }
+}

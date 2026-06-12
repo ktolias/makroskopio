@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-ssr
+.vite
+*.tsbuildinfo
+.DS_Store
+*.local
+
+# stray debug screenshots
+Screenshot_*.jpg
+Screenshot_*.png
