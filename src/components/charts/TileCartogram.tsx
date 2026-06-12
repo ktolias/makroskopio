@@ -42,7 +42,7 @@ export function TileCartogram({ indicator, year }: TileCartogramProps) {
     <div className="cartogram">
       <div
         className="cartogram__grid"
-        style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, gridTemplateRows: `repeat(${ROWS}, 1fr)` }}
+        style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`, gridTemplateRows: `repeat(${ROWS}, minmax(0, 1fr))` }}
       >
         {tiles.map(({ co, v, bg }) => {
           const strong = hover === co.iso

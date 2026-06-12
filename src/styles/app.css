@@ -280,12 +280,12 @@
 /* ---------------- CHART CARD ---------------- */
 .chart-card { display: grid; grid-template-columns: 1fr; gap: 0; overflow: hidden; margin-bottom: 26px; }
 .chart-card--side { grid-template-columns: 1.5fr 1fr; }
-.chart-card__main { padding: 26px 28px; }
+.chart-card__main { padding: 26px 28px; min-width: 0; }
 .chart-card__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
 .chart-card__figlabel { font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; margin-bottom: 6px; }
 .chart-card__title { font-size: 20px; }
 .chart-card__subtitle { font-size: 13px; color: var(--text-2); margin-top: 6px; }
-.chart-card__viz { width: 100%; }
+.chart-card__viz { width: 100%; min-width: 0; }
 .chart-card__source { font-size: 11.5px; color: var(--text-3); margin-top: 14px; }
 .chart-card__aside {
   padding: 26px 28px;
@@ -389,14 +389,14 @@
 .tile {
   border-radius: 11px; border: 1px solid var(--stroke);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  cursor: pointer; padding: 4px; min-height: 0;
+  cursor: pointer; padding: 4px; min-height: 0; min-width: 0; overflow: hidden;
   transition: transform 0.18s var(--ease), border-color 0.18s, opacity 0.18s, box-shadow 0.18s;
 }
 .tile:hover, .tile.is-hover { transform: scale(1.08); z-index: 2; box-shadow: 0 12px 30px -12px rgba(0,0,0,0.6); }
 .tile.is-dim { opacity: 0.4; }
 .tile.is-top { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c-gdp) 70%, transparent); }
 .tile__iso { font-size: clamp(9px, 1vw, 12px); font-weight: 600; color: var(--text-0); }
-.tile__val { font-size: clamp(8px, 0.85vw, 10.5px); color: var(--text-1); font-variant-numeric: tabular-nums; }
+.tile__val { font-size: clamp(8px, 0.85vw, 10.5px); color: var(--text-1); font-variant-numeric: tabular-nums; max-width: 100%; overflow: hidden; }
 .cartogram__side { height: 100%; display: flex; align-items: center; }
 .cartogram__readout { padding: 24px; width: 100%; min-height: 200px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
 .cartogram__readout-c { font-size: 24px; font-weight: 600; color: var(--text-0); }
@@ -429,7 +429,7 @@
 .heatmap { padding: 6px 0; }
 .heatmap__grid { display: grid; gap: 6px; }
 .heatmap__corner { }
-.heatmap__colh, .heatmap__rowh { font-size: 11.5px; color: var(--text-2); font-weight: 500; display: flex; align-items: center; }
+.heatmap__colh, .heatmap__rowh { font-size: 11.5px; color: var(--text-2); font-weight: 500; display: flex; align-items: center; min-width: 0; overflow-wrap: anywhere; }
 .heatmap__colh { justify-content: center; text-align: center; padding-bottom: 4px; }
 .heatmap__rowh { padding-right: 8px; }
 .heatmap__cell {
@@ -442,7 +442,7 @@
 .heatmap__val { font-size: 15px; font-weight: 600; color: var(--text-0); }
 .heatmap__val.is-strong { font-size: 17px; }
 .heatmap__cell.is-diag .heatmap__val { color: var(--text-3); font-weight: 400; }
-.heatmap__cell { display: flex !important; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.heatmap__cell { display: flex !important; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 0; overflow: hidden; }
 .heatmap__sig { font-size: 11px; font-weight: 700; color: color-mix(in srgb, var(--text-0) 78%, transparent); letter-spacing: 0.04em; line-height: 1; }
 .heatmap__sig.is-ns { font-size: 9.5px; font-weight: 500; color: var(--text-3); letter-spacing: 0; }
 .heatmap__legend { display: flex; align-items: center; gap: 10px; margin-top: 18px; font-size: 12px; color: var(--text-3); }
@@ -601,12 +601,22 @@
   .metric-table td:first-child { flex-wrap: wrap; gap: 5px; }
   .dash, .dash-lines, .dist-panel { padding-left: 16px; padding-right: 16px; }
   .chart-card__main, .chart-card__aside { padding: 22px 18px; }
-  .heatmap__grid { grid-template-columns: minmax(56px, 1fr) repeat(4, 1fr); gap: 4px; }
-  .heatmap__colh, .heatmap__rowh { font-size: 10px; }
-  .heatmap__val { font-size: 13px; }
-  .heatmap__val.is-strong { font-size: 14px; }
-  .heatmap__sig { font-size: 9px; }
+  .heatmap__grid { gap: 4px; }
+  .heatmap__colh, .heatmap__rowh { font-size: 9.5px; }
+  .heatmap__cell { border-radius: 7px; }
+  .heatmap__val { font-size: 12px; }
+  .heatmap__val.is-strong { font-size: 13px; }
+  .heatmap__sig { font-size: 8px; }
+  .heatmap__sig.is-ns { font-size: 7px; }
   .corrpair__value { font-size: 28px; }
+  /* hero title must fit a 375px screen */
+  .hero__title { font-size: clamp(32px, 8.4vw, 58px); }
+  /* cartogram: tighter tiles so all 8 columns fit */
+  .dash { padding: 20px 14px; }
+  .cartogram__grid { gap: 5px; }
+  .tile { padding: 3px; border-radius: 9px; }
+  .tile__iso { font-size: 10px; }
+  .tile__val { font-size: 8px; }
 }
 
 /* ---------------- ROTATE GUARD — force portrait on phones ---------------- */

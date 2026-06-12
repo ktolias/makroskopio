@@ -23,7 +23,7 @@ export function CorrelationHeatmap() {
 
   return (
     <div className="heatmap">
-      <div className="heatmap__grid" style={{ gridTemplateColumns: `minmax(96px,1.2fr) repeat(${labels.length}, 1fr)` }}>
+      <div className="heatmap__grid" style={{ gridTemplateColumns: `minmax(0,1.2fr) repeat(${labels.length}, minmax(0, 1fr))` }}>
         <div className="heatmap__corner" />
         {labels.map((l, j) => (
           <div key={j} className="heatmap__colh">{l}</div>
